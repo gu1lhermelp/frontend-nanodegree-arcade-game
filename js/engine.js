@@ -80,7 +80,33 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        if (checkCollisions()) {
+          reset();
+        }
+        if (checkFinished()) {
+          reset();
+        }
+    }
+
+    function checkCollisions() {
+      var collided = false;
+      var x_dist, ydist;
+      allEnemies.forEach(function(enemy) {
+          x_dist = enemy.x - player.x;
+          y_dist = enemy.y - player.y;
+          if (x_dist < 70 && x_dist > -70 && y_dist < 60 && y_dist > -80) {
+            collided = true;
+          }
+      });
+
+      return collided;
+    }
+
+    function checkFinished() {
+      if (player.y < -3) {
+        return true;
+      }
+      return false;
     }
 
     /* This is called by the update function and loops through all of the
@@ -132,7 +158,7 @@ var Engine = (function(global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
-                ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+                ctx.drawImage(Resources.get(rowImages[row]), col * 100, row * 82);
             }
         }
 
@@ -159,7 +185,11 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
+        console.log("reset");
+        allEnemies.forEach(function(enemy) {
+          enemy.reset();
+        });
+        player.reset();
     }
 
     /* Go ahead and load all of the images we know we're going to need to
