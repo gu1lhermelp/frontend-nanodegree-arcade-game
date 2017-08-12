@@ -1,3 +1,4 @@
+"use strict;"
 // Enemies our player must avoid
 var Enemy = function(x, y, speed) {
     // Variables applied to each of our instances go here,
@@ -61,6 +62,11 @@ Player.prototype.update = function() {
   if (this.y > 425) {
     this.y = 425;
   }
+  // Check if player reached the water
+  if (this.y < -3) {
+    return true;
+  }
+  return false;
 };
 Player.prototype.handleInput = function(key) {
   switch (key) {
@@ -76,6 +82,21 @@ Player.prototype.handleInput = function(key) {
     case 'down':
       this.y += 15;
   }
+};
+Player.prototype.checkCollisions = function(allEnemies) {
+  var collided = false;
+  var x_dist, ydist;
+  var x = this.x;
+  var y = this.y;
+  allEnemies.forEach(function(enemy) {
+      x_dist = enemy.x - x;
+      y_dist = enemy.y - y;
+      if (x_dist < 70 && x_dist > -70 && y_dist < 60 && y_dist > -80) {
+        collided = true;
+      }
+  });
+
+  return collided;
 };
 
 // Now instantiate your objects.

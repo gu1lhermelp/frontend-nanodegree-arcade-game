@@ -79,34 +79,12 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
-        updateEntities(dt);
-        if (checkCollisions()) {
+        if (updateEntities(dt)) {
           reset();
         }
-        if (checkFinished()) {
+        if (player.checkCollisions(allEnemies)) {
           reset();
         }
-    }
-
-    function checkCollisions() {
-      var collided = false;
-      var x_dist, ydist;
-      allEnemies.forEach(function(enemy) {
-          x_dist = enemy.x - player.x;
-          y_dist = enemy.y - player.y;
-          if (x_dist < 70 && x_dist > -70 && y_dist < 60 && y_dist > -80) {
-            collided = true;
-          }
-      });
-
-      return collided;
-    }
-
-    function checkFinished() {
-      if (player.y < -3) {
-        return true;
-      }
-      return false;
     }
 
     /* This is called by the update function and loops through all of the
@@ -120,7 +98,7 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        player.update();
+        return player.update();
     }
 
     /* This function initially draws the "game level", it will then call
